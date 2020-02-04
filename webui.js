@@ -6,6 +6,10 @@ var manager;
 var teleop;
 var ros;
 
+var pose;
+var vec3;
+var quat;
+
 function moveAction(linear, angular) {
     if (linear !== undefined && angular !== undefined) {
         twist.linear.x = linear;
@@ -39,6 +43,37 @@ function initVelocityPublisher() {
     });
     // Register publisher within ROS system
     cmdVel.advertise();
+}
+
+function initPoseSubscriber(){
+
+    vec3 = new ROSLIB.Vector3({
+        x : 0,
+        y : 0,
+        z : 0
+    });
+
+    quat = new ROSLIB.Quaternion({
+        x : 0,
+        y : 0,
+        z : 0,
+        w : 0
+    });
+
+    pose = new ROSLIB.Pose({
+        position : vec3,
+        orientation : quat
+    });
+
+    poseTopic = new ROSLIB.Topic({
+        ros: ros,
+        name: 'turtle1/pose',
+        messageType: 'turtlesim/Pose'
+    });
+
+    poseTopic.subscribe(function(message){
+        pose = poseTopic.data;
+        console.log('Pose from' + poseTopic.name + ': ' + pose);});
 }
 
 function initTeleopKeyboard() {
@@ -88,9 +123,9 @@ function createJoystick() {
             var lin = Math.cos(direction / 57.29) * nipple.distance * 0.005;
             var ang = Math.sin(direction / 57.29) * nipple.distance * 0.05;
             // nipplejs is triggering events when joystic moves each pixel
-            // we need delay between consecutive messege publications to 
+            // we need delay between consecutive messege publications to
             // prevent system from being flooded by messages
-            // events triggered earlier than 50ms after last publication will be dropped 
+            // events triggered earlier than 50ms after last publication will be dropped
             if (publishImmidiately) {
                 publishImmidiately = false;
                 moveAction(lin, ang);
@@ -123,7 +158,7 @@ window.onload = function () {
     // Function to get video from an ip/port - not being used
     // get handle for video placeholder
     //video = document.getElementById('video');
-    // Populate video source 
+    // Populate video source
     //video.src = "http://" + robot_IP + ":8080/stream?topic=/camera/rgb/image_raw&type=mjpeg&quality=80";
     // video.onload = function () {
     //     // joystick and keyboard controls will be available only when video is correctly loaded
@@ -133,5 +168,6 @@ window.onload = function () {
 
     createJoystick();
     initTeleopKeyboard();
+    initPoseSubscriber();
 }
 
