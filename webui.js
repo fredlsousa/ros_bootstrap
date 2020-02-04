@@ -47,22 +47,30 @@ function initVelocityPublisher() {
 
 function initPoseSubscriber(){
 
-    vec3 = new ROSLIB.Vector3({
+    // vec3 = new ROSLIB.Vector3({
+    //     x : 0,
+    //     y : 0,
+    //     z : 0
+    // });
+    //
+    // quat = new ROSLIB.Quaternion({
+    //     x : 0,
+    //     y : 0,
+    //     z : 0,
+    //     w : 0
+    // });
+    //
+    // pose = new ROSLIB.Pose({
+    //     position : vec3,
+    //     orientation : quat
+    // });
+
+    pose = new ROSLIB.Message({
         x : 0,
         y : 0,
-        z : 0
-    });
-
-    quat = new ROSLIB.Quaternion({
-        x : 0,
-        y : 0,
-        z : 0,
-        w : 0
-    });
-
-    pose = new ROSLIB.Pose({
-        position : vec3,
-        orientation : quat
+        theta : 0,
+        linear_velocity: 0,
+        angular_velocity: 0
     });
 
     poseTopic = new ROSLIB.Topic({
