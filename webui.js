@@ -7,6 +7,7 @@ var teleop;
 var ros;
 
 var pose;
+var poseTopic;
 var vec3;
 var quat;
 
@@ -80,8 +81,10 @@ function initPoseSubscriber(){
     });
 
     poseTopic.subscribe(function(message){
-        pose = poseTopic.data;
-        console.log('Pose from' + poseTopic.name + ': ' + pose);});
+        //pose = poseTopic.data;
+        pose = message;
+        //console.log('Pose from' + poseTopic.name + ': ' + JSON.stringify(message));});
+        console.log('Pose from' + poseTopic.name + ': ' + pose.x + ", " + pose.y);});
 }
 
 function initTeleopKeyboard() {
