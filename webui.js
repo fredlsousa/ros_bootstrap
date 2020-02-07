@@ -48,24 +48,6 @@ function initVelocityPublisher() {
 
 function initPoseSubscriber(){
 
-    // vec3 = new ROSLIB.Vector3({
-    //     x : 0,
-    //     y : 0,
-    //     z : 0
-    // });
-    //
-    // quat = new ROSLIB.Quaternion({
-    //     x : 0,
-    //     y : 0,
-    //     z : 0,
-    //     w : 0
-    // });
-    //
-    // pose = new ROSLIB.Pose({
-    //     position : vec3,
-    //     orientation : quat
-    // });
-
     pose = new ROSLIB.Message({
         x : 0,
         y : 0,
@@ -84,7 +66,8 @@ function initPoseSubscriber(){
         //pose = poseTopic.data;
         pose = message;
         //console.log('Pose from' + poseTopic.name + ': ' + JSON.stringify(message));});
-        console.log('Pose from' + poseTopic.name + ': ' + pose.x + ", " + pose.y);});
+        console.log('Pose from' + poseTopic.name + ': ' + pose.x + ", " + pose.y + ", "+ pose.theta + ", "
+            + pose.linear_velocity + ", " + pose.angular_velocity);});
 }
 
 function initTeleopKeyboard() {
@@ -104,6 +87,14 @@ function initTeleopKeyboard() {
     robotSpeedRange.oninput = function () {
         teleop.scale = robotSpeedRange.value / 100
     }
+}
+
+function plotGraph(){
+    Plotly.plot('chart'[{
+        y:[pose.x],
+        type:'line'
+    }]);
+    document.getElementById('chart');
 }
 
 function createJoystick() {
@@ -180,5 +171,6 @@ window.onload = function () {
     createJoystick();
     initTeleopKeyboard();
     initPoseSubscriber();
+    plotGraph();
 }
 
